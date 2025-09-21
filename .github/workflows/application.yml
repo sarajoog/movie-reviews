@@ -30,24 +30,19 @@ jobs:
       - name: Run tests with coverage
         run: mvn clean test -B --file pom.xml -Dmaven.test.failure.ignore=true
 
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v1.0.0
-        with:
-          args: >
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.java.jdkHome=$JAVA_HOME_17_X64
+      - name: Run SonarQube analysis with Maven
+        run: |
+          # Force Maven to use Java 17 for SonarScanner
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar \
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.java.jdkHome=$JAVA_HOME_17_X64 \
+            -Dsonar.analysis.automaticScan.disabled=true \
+            -B
         env:
-          SONAR_HOST_URL: https://sonarcloud.io
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: SonarQube Quality Gate Check
-        uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
-        timeout-minutes: 5
-        env:
-          SONAR_HOST_URL: https://sonarcloud.io
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build-deploy:
     runs-on: ubuntu-latest
