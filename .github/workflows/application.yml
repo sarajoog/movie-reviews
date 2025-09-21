@@ -1,4 +1,4 @@
-name: Build, Analyze & Deploy Spring app v2.0
+name: Build, Analyze & Deploy Spring app v2.2
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
       - name: Run tests with coverage
         run: mvn clean test -B --file pom.xml -Dmaven.test.failure.ignore=true
 
-      - name: Run SonarQube analysis with Maven (Force JDK 17)
+      - name: Run SonarQube analysis with Maven (Force JDK 17 + Quality Gate)
         run: |
           export JAVA_HOME=${{ env.JAVA_HOME_17_X64 }}
           export PATH="$JAVA_HOME/bin:$PATH"
@@ -39,17 +39,9 @@ jobs:
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.qualitygate.wait=true \
             -B
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: SonarCloud Quality Gate check
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          args: >
-            -Dsonar.qualitygate.wait=true
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-deploy:
