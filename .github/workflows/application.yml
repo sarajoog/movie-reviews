@@ -30,16 +30,15 @@ jobs:
       - name: Run tests with coverage
         run: mvn clean test -B --file pom.xml -Dmaven.test.failure.ignore=true
 
-      - name: Run SonarQube analysis with Maven
+      - name: Run SonarQube analysis with Maven (Force JDK 17)
         run: |
-          # Force Maven to use Java 17 for SonarScanner
+          export JAVA_HOME=${{ env.JAVA_HOME_17_X64 }}
+          export PATH="$JAVA_HOME/bin:$PATH"
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar \
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.java.jdkHome=$JAVA_HOME_17_X64 \
-            -Dsonar.analysis.automaticScan.disabled=true \
             -B
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
