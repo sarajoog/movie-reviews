@@ -32,8 +32,13 @@ jobs:
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v1.0.0
+        with:
+          args: >
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.java.jdkHome=$JAVA_HOME_17_X64  # Force Java 17 for scanner
         env:
-          SONAR_HOST_URL: https://sonarcloud.io  # Add this line
+          SONAR_HOST_URL: https://sonarcloud.io
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -41,7 +46,7 @@ jobs:
         uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
         timeout-minutes: 5
         env:
-          SONAR_HOST_URL: https://sonarcloud.io  # Add this line too
+          SONAR_HOST_URL: https://sonarcloud.io
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build-deploy:
