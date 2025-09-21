@@ -36,7 +36,7 @@ jobs:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.java.jdkHome=$JAVA_HOME_17_X64  # Force Java 17 for scanner
+            -Dsonar.java.jdkHome=$JAVA_HOME_17_X64
         env:
           SONAR_HOST_URL: https://sonarcloud.io
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
