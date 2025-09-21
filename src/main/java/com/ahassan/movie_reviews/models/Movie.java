@@ -2,7 +2,6 @@ package com.ahassan.movie_reviews.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "movies")
