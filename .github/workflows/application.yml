@@ -1,4 +1,4 @@
-name: Build, Analyze & Deploy Spring app v2.0
+name: Build, Analyze & Deploy Spring app v2.1
 
 on:
   push:
@@ -41,6 +41,15 @@ jobs:
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
             -B
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: SonarCloud Quality Gate check
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          args: >
+            -Dsonar.qualitygate.wait=true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-deploy:
