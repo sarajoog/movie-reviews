@@ -1,4 +1,4 @@
-name: Build, Analyze & Deploy Spring app v2.1
+name: Build, Analyze & Deploy Spring app v2.0
 
 on:
   push:
